@@ -1,45 +1,89 @@
-API Endpoints
-Authentication
-Register User
+# Library API
 
-Endpoint: POST /api/auth/signup
+## Description
+A simple library management API with user authentication and role-based access control. The API allows users to register, log in, and manage books and authors, with access restrictions based on user roles.
+
+## Features
+- **User Authentication**: Register and log in users using JSON Web Tokens (JWT).
+- **Protected Routes**: Access restricted endpoints based on user roles.
+- **Role-Based Access Control**: Different access levels for users and admins.
+- **CRUD Operations**: Manage books and authors in the library system.
+- **Pagination**: List books with pagination support.
+
+## Getting Started
+
+### Prerequisites
+- **Node.js**: Ensure you have Node.js installed. [Download Node.js](https://nodejs.org/).
+- **MongoDB**: Ensure you have MongoDB installed and running. [Download MongoDB](https://www.mongodb.com/try/download/community).
+
+### Installation
+
+1. **Clone the Repository**
+   ```bash
+   git clone <repository-url>
+   cd library-api
+
+
+2. **Install Dependencies**
+   ```bash
+   npm install
+
+3. **Create a .env file and include secret variables**
+    MONGO_URI=???
+    JWT_SECRET=qUiWUnhmyq
+    PORT=5000
+
+4. **Seed the Database (Optional)**
+    ```bash
+    npm run seed
+
+5.  **Start the server**
+     ```bash
+     npm run dev
+
+
+
+
+
+
+## API Endpoints
+ ## Authentication
+ ### Register User
+
+ Endpoint: POST /api/auth/signup
 Body:
-json
-Copy code
+
 {
   "username": "user",
   "password": "password"
 }
+
 Response:
-json
-Copy code
 {
   "token": "your_jwt_token"
 }
-Login User
+
+### Login User
 
 Endpoint: POST /api/auth/login
 Body:
-json
-Copy code
 {
   "username": "user",
   "password": "password"
 }
+
 Response:
-json
-Copy code
+
 {
   "token": "your_jwt_token"
 }
-Books
-Get All Books
+
+### Books
+### Get All Books
 
 Endpoint: GET /api/books
 Query Parameters: page (number) and limit (number) for pagination.
 Response:
-json
-Copy code
 [
   {
     "title": "Book Title",
@@ -48,12 +92,11 @@ Copy code
     "genre": "Genre"
   }
 ]
-Add a New Book
+
+### Add a New Book
 
 Endpoint: POST /api/books
 Body:
-json
-Copy code
 {
   "title": "Book Title",
   "author": "Author ID",
@@ -61,21 +104,22 @@ Copy code
   "genre": "Genre"
 }
 Headers: { "x-auth-token": "your_jwt_token" }
+
 Response:
-json
-Copy code
 {
   "title": "Book Title",
   "author": "Author ID",
   "publicationYear": 2020,
   "genre": "Genre"
 }
-Update a Book
+
+### Update a Book
 
 Endpoint: PUT /api/books/:id
 Body:
 json
-Copy code
+
+code
 {
   "title": "Updated Title",
   "author": "Updated Author ID",
@@ -83,104 +127,102 @@ Copy code
   "genre": "Updated Genre"
 }
 Headers: { "x-auth-token": "your_jwt_token" }
+
 Response:
-json
-Copy code
+
+code
 {
   "title": "Updated Title",
   "author": "Updated Author ID",
   "publicationYear": 2021,
   "genre": "Updated Genre"
 }
-Delete a Book
+
+### Delete a Book
 
 Endpoint: DELETE /api/books/:id
 Headers: { "x-auth-token": "your_jwt_token" }
 Response:
+
 json
-Copy code
+code
 {
   "message": "Book deleted"
 }
-Authors
-Get All Authors
+
+## Authors
+### Get All Authors
 
 Endpoint: GET /api/authors
 Response:
 json
-Copy code
+code
 [
   {
     "name": "Author Name"
   }
 ]
-Add a New Author
+
+### Add a New Author
 
 Endpoint: POST /api/authors
 Body:
 json
-Copy code
+code
 {
   "name": "Author Name"
 }
 Headers: { "x-auth-token": "your_jwt_token" }
 Response:
-json
-Copy code
+
 {
   "name": "Author Name"
 }
-Update an Author
+
+### Update an Author
 
 Endpoint: PUT /api/authors/:id
 Body:
 json
-Copy code
 {
   "name": "Updated Author Name"
 }
+
 Headers: { "x-auth-token": "your_jwt_token" }
 Response:
 json
-Copy code
 {
   "name": "Updated Author Name"
 }
-Delete an Author
+
+### Delete an Author
 
 Endpoint: DELETE /api/authors/:id
 Headers: { "x-auth-token": "your_jwt_token" }
 Response:
-json
-Copy code
 {
   "message": "Author deleted"
 }
-Protected Routes
-Admin Route
-Endpoint: GET /api/admin
-Headers: { "x-auth-token": "your_jwt_token" }
-Roles Required: Admin
-Response:
-json
-Copy code
-{
-  "message": "Admin route accessed"
-}
-Security Practices
-Password Storage
-Hashing Passwords: Passwords are hashed using bcryptjs before storing them in the database to protect against unauthorized access.
-Salting: bcrypt automatically adds a salt to passwords to ensure unique hashes for identical passwords.
-JWT (JSON Web Tokens)
-Generating JWT:
+
+
+
+# Security Practices
+
+## Password Storage
+ 
+ ### Hashing Passwords: 
+ Passwords are hashed using bcryptjs before storing them in the database to protect against unauthorized access.
+### Salting: 
+bcrypt automatically adds a salt to passwords to ensure unique hashes for identical passwords.
+
+## JWT (JSON Web Tokens)
+ ### Generating JWT:
 
 Payload: Contains user information and claims.
 Signing: Tokens are signed using a secret key to create a secure token.
 Expiration: Tokens are set to expire after a specified duration (e.g., 1 hour).
 Example Code:
 
-javascript
-Copy code
 const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 Validating JWT:
 
@@ -188,8 +230,6 @@ Extract Token: Retrieve the JWT from the request.
 Verify Token: Use the secret key to validate the token’s authenticity and decode it.
 Example Code:
 
-javascript
-Copy code
 jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
   if (err) {
     return res.status(401).json({ message: 'Invalid token' });
@@ -197,6 +237,7 @@ jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
   req.user = decoded.user;
   next();
 });
+
 Role-Based Access Control (RBAC)
 Define Roles: Assign roles (e.g., user, admin) to users based on their permissions.
 
